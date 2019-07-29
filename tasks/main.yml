@@ -14,3 +14,29 @@
   yum:
     name: "nginx-{{ nginx_version }}"
     state: "present"
+
+- name: "Copy main nginx config"
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: "Download upstreams config"
+  get_url:
+    url: "{{ nginx_upstreams_url }}"
+    dest: "/tmp/nginx_upstreams.yml"
+    force: true
+  register: "nginx_upstreams_download_result"
+
+- name: "Read upstreams config"
+  slurp:
+    src: "/tmp/nginx_upstreams.yml"
+  register: slurp_upstreams
+
+- name: Debug
+  debug:
+    msg: "{{ slurp_upstreams['content'] | b64decode | from_yaml }}"
+
+- name: "Generate nginx upstreams config"
+  template:
+    src: conf.d/upstreams.conf.j2
+    dest: /etc/nginx/conf.d/upstreams.conf
