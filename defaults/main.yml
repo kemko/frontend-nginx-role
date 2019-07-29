@@ -2,6 +2,10 @@
 
 nginx_start: true
 nginx_branch: mainline
-nginx_repo: "https://nginx.org/packages/{{(nginx_branch == 'mainline') | ternary('mainline/', '')}}centos/{{ansible_distribution_major_version}}/$basearch/"
+nginx_repo: >-
+      https://nginx.org/packages/{{ (nginx_branch == 'mainline')
+      | ternary('mainline/', '') }}{{ (ansible_distribution == "RedHat")
+      | ternary('rhel', 'centos') }}/{{ ansible_distribution_major_version }}/$basearch/
+
 nginx_version: "1.17.2"
 nginx_cleanup_config: false
