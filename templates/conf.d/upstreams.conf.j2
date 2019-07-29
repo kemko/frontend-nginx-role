@@ -1,0 +1,5 @@
+{{ ansible_managed | comment }}
+
+{% for upstream in slurp_upstreams['content'] | b64decode | from_yaml %}
+  {{ upstream.server_name }}
+{% endfor %}
