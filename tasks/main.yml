@@ -4,7 +4,7 @@
   yum_repository:
     name: "nginx-{{ nginx_branch }}"
     description: "nginx {{ nginx_branch }} repository"
-    baseurl: "{{ ginx_repo }}"
+    baseurl: "{{ nginx_repo }}"
     gpgcheck: true
     gpgkey: "https://nginx.org/keys/nginx_signing.key"
     enabled: true
