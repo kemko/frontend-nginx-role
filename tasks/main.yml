@@ -2,9 +2,9 @@
 
 - name: "Install nginx repository"
   yum_repository:
-    name: "nginx-{{nginx_branch}}"
-    description: "nginx {{nginx_branch}} repository"
-    baseurl: "{{nginx_repo}}"
+    name: "nginx-{{ nginx_branch }}"
+    description: "nginx {{ nginx_branch }} repository"
+    baseurl: "{{ ginx_repo }}"
     gpgcheck: true
     gpgkey: "https://nginx.org/keys/nginx_signing.key"
     enabled: true
@@ -12,5 +12,5 @@
 
 - name: "Install nginx package"
   yum:
-    name: "nginx-{{nginx_version}}"
+    name: "nginx-{{ nginx_version }}"
     state: "present"
