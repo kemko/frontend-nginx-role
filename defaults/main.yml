@@ -5,3 +5,9 @@ nginx_branch: mainline
 nginx_repo: "https://nginx.org/packages/{{(nginx_branch == 'mainline') | ternary('mainline/', '')}}centos/{{ansible_distribution_major_version}}/$basearch/"
 nginx_version: "1.17.2"
 nginx_cleanup_config: false
+
+nginx_worker_processes: auto
+nginx_worker_connections: 1024
+nginx_keepalive_timeout: 65
+
+nginx_upstreams_url: "https://example.com/ngx-role-test/test/upstream.yml"
