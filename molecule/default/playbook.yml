@@ -3,3 +3,4 @@
   hosts: all
   roles:
     - role: frontend-nginx-role
+      nginx_upstreams_url: "https://gist.githubusercontent.com/kemko/aa7384f4330aefa8a116f0ad90ac2943/raw/ef6d3ab738c6cc77c6a4d796fe95903932944751/upstream.yml"
