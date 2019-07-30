@@ -1,0 +1,16 @@
+{{ ansible_managed | comment }}
+
+server {
+    listen      {{ nginx_listen_addr }}:{{ nginx_listen_port }} default_server;
+    server_name localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
