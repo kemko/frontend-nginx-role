@@ -1,2 +1,7 @@
 ---
-# handlers file for kemko.frontend-nginx
+
+- name: Reload nginx
+  systemd:
+    name: nginx
+    state: reloaded
+  when: nginx_start
