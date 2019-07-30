@@ -14,6 +14,19 @@
   yum:
     name: "nginx-{{ nginx_version }}"
     state: "present"
+- name: Enable and start nginx
+  systemd:
+    name: nginx
+    enabled: true
+    state: started
+  when: nginx_start
+
+- name: Disable and stop nginx
+  systemd:
+    name: nginx
+    enabled: true
+    state: started
+  when: not nginx_start
 
 - name: "Copy main nginx config"
   template:
