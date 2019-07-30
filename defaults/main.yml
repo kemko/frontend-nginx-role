@@ -11,3 +11,6 @@ nginx_worker_connections: 1024
 nginx_keepalive_timeout: 65
 
 nginx_upstreams_url: "https://example.com/ngx-role-test/test/upstream.yml"
+
+nginx_listen_addr: 0.0.0.0
+nginx_listen_port: 80
