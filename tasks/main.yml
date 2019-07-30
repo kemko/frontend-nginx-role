@@ -9,11 +9,14 @@
     gpgkey: "https://nginx.org/keys/nginx_signing.key"
     enabled: true
     state: "present"
+  tags: ["packages"]
 
 - name: "Install nginx package"
   yum:
     name: "nginx-{{ nginx_version }}"
     state: "present"
+  tags: ["packages"]
+
 - name: Enable and start nginx
   systemd:
     name: nginx
