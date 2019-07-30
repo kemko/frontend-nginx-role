@@ -51,17 +51,23 @@
     dest: "/tmp/nginx_upstreams.yml"
     force: true
   register: "nginx_upstreams_download_result"
+  tags:
+    - configs
+    - upstreams
 
-- name: "Read upstreams config"
+- name: "Read upstreams config for nginx"
   slurp:
     src: "/tmp/nginx_upstreams.yml"
-  register: slurp_upstreams
-
-- name: Debug
-  debug:
-    msg: "{{ slurp_upstreams['content'] | b64decode | from_yaml }}"
+  register: upstreams_slurped
+  tags:
+    - configs
+    - upstreams
 
 - name: "Generate nginx upstreams config"
   template:
     src: conf.d/upstreams.conf.j2
     dest: /etc/nginx/conf.d/upstreams.conf
+  notify: Reload nginx
+  tags:
+    - configs
+    - upstreams

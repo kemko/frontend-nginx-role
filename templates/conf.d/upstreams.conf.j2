@@ -1,5 +1,50 @@
 {{ ansible_managed | comment }}
 
-{% for upstream in slurp_upstreams['content'] | b64decode | from_yaml %}
-  {{ upstream.server_name }}
+{% if nginx_resolver_string | default(false) %}
+  resolver {{ nginx_resolver_string }};
+{% endif %}
+
+{% set upstreams_encoded = upstreams_slurped['content'] | b64decode | from_yaml %}
+
+## BEGIN upstreams set
+{% for upstream in upstreams_encoded -%}
+  upstream {{ upstream.name }} {
+  {% for server in upstream.servers -%}
+    {% set additional_upstream_server_config -%}
+      {% if server.weight | default(false) %}weight={{ server.weight }}{% endif %}
+      {% if server.max_conns | default(false) %}max_conns={{ server.max_conns }}{% endif %}
+      {% if server.max_fails | default(false) %}max_fails={{ server.max_fails }}{% endif %}
+      {% if server.fail_timeout | default(false) %}fail_timeout={{ server.fail_timeout }}{% endif %}
+      {% if server.backup | default(false) %}backup{% endif %}
+      {% if server.down | default(false) %}down{% endif %}
+    {% endset %}
+    server {{ server.name }} {{ additional_upstream_server_config | replace("\n", " ") }};
+  {% endfor %}
+  }
 {% endfor %}
+## END upstreams set
+
+## BEGIN servers set
+{% for upstream in upstreams_encoded -%}
+  server {
+    listen {{ nginx_listen_addr }}:{{ nginx_listen_port }};
+    server_name {{ upstream.external_domains | join(" ") }};
+
+    location / {
+      proxy_pass http://{{ upstream.name }};
+
+      proxy_set_header   Host            $host;
+      proxy_set_header   X-Real-IP       $remote_addr;
+      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+
+      {% if upstream.additional_location_config | default(false) -%}
+        {{ upstream.additional_location_config }}
+      {% endif %}
+    }
+
+    {% if upstream.additional_server_config | default(false) -%}
+      {{ upstream.additional_server_config }}
+    {% endif %}
+  }
+{% endfor %}
+## END servers set
