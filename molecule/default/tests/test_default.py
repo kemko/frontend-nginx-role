@@ -6,9 +6,17 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
 
-def test_hosts_file(host):
-    f = host.file('/etc/hosts')
+def test_nginx_is_installed(Package):
+    nginx = Package("nginx")
+    assert nginx.is_installed
 
-    assert f.exists
-    assert f.user == 'root'
-    assert f.group == 'root'
+
+def test_command_output(Command):
+    command = Command('nginx -t')
+    assert command.rc == 0
+
+
+def test_service_running(Service):
+    service = Service('nginx')
+    assert service.is_running
+    assert service.is_enabled
