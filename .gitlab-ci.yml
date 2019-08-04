@@ -12,7 +12,7 @@ before_script:
   - ansible --version
   - molecule --version
 
-molecule-role-common:
+molecule:
   stage: tests
   tags:
     - docker
@@ -21,3 +21,7 @@ molecule-role-common:
     PY_COLORS: 1
   script:
     - molecule test
+  artifacts:
+    paths:
+      - nginx_configs
+    expire_in: 1 month
